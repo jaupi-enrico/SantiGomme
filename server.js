@@ -1,4 +1,4 @@
-require('dotenv').config(); // deve stare **prima di tutto**
+require('dotenv').config(); // sempre PRIMA
 const express = require('express');
 const nodemailer = require('nodemailer');
 const path = require('path');
@@ -12,10 +12,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.post('/api/contatti', async (req, res) => {
   const { nome, email, messaggio } = req.body;
-
-  if (!nome || !email || !messaggio) {
-    return res.status(400).json({ success: false });
-  }
+  if (!nome || !email || !messaggio) return res.status(400).json({ success: false });
 
   try {
     const transporter = nodemailer.createTransport({
@@ -33,6 +30,7 @@ app.post('/api/contatti', async (req, res) => {
       text: messaggio
     });
 
+    console.log(`Email inviata da ${nome} <${email}>`);
     res.status(200).json({ success: true });
   } catch (err) {
     console.error('Errore invio email:', err);
@@ -40,4 +38,4 @@ app.post('/api/contatti', async (req, res) => {
   }
 });
 
-app.listen(port, () => console.log(`Server attivo su http://localhost:${port} | Port: ${port}`));
+app.listen(port, () => console.log(`Server attivo sulla porta ${port}`));
