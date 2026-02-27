@@ -1,5 +1,22 @@
 <!DOCTYPE html>
 <html lang="it">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "AutoRepair",
+  "name": "LA SANTI Gomme srl",
+  "image": "https://www.lasantigomme.it/img/logo.png",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Via ...",
+    "addressLocality": "Travagliato",
+    "addressRegion": "BS",
+    "addressCountry": "IT"
+  },
+  "telephone": "+39 030000000",
+  "url": "https://www.lasantigomme.it/"
+}
+</script>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -390,7 +407,7 @@ body.dark-mode .footer-sezione hr {
 
       <div class="col-md-6 col-lg-3">
         <div class="card card-servizio p-4 h-100">
-          <img src="img/servizi/gomma.svg" class="card-img-top" alt="Cambio Gomme">
+          <img src="img/servizi/gomma.svg" class="card-img-top" alt="Cambio Gomme" loading="lazy">
           <h5>Cambio Gomme Stagionale</h5>
           <p>Montaggio e smontaggio pneumatici estivi e invernali.</p>
         </div>
@@ -398,7 +415,7 @@ body.dark-mode .footer-sezione hr {
 
       <div class="col-md-6 col-lg-3">
         <div class="card card-servizio p-4 h-100">
-            <img src="img/servizi/riparazione.svg" class="card-img-top" alt="Riparazione Pneumatici">
+            <img src="img/servizi/riparazione.svg" class="card-img-top" alt="Riparazione Pneumatici" loading="lazy">
           <h5>Riparazione Pneumatici</h5>
           <p>Interventi rapidi su forature e danni comuni.</p>
         </div>
@@ -406,7 +423,7 @@ body.dark-mode .footer-sezione hr {
 
       <div class="col-md-6 col-lg-3">
         <div class="card card-servizio p-4 h-100">
-              <img src="img/servizi/volante.svg" class="card-img-top" alt="Equilibratura e Convergenza">
+              <img src="img/servizi/volante.svg" class="card-img-top" alt="Equilibratura e Convergenza" loading="lazy">
           <h5>Equilibratura e Convergenza</h5>
           <p>Assetto preciso per una guida sicura e stabile.</p>
         </div>
@@ -414,7 +431,7 @@ body.dark-mode .footer-sezione hr {
 
       <div class="col-md-6 col-lg-3">
         <div class="card card-servizio p-4 h-100">
-          <img src="img/servizi/deposito.svg" class="card-img-top" alt="Deposito Gomme">
+          <img src="img/servizi/deposito.svg" class="card-img-top" alt="Deposito Gomme" loading="lazy">
           <h5>Deposito Gomme</h5>
           <p>Custodia sicura dei tuoi pneumatici fuori stagione.</p>
         </div>
@@ -433,10 +450,10 @@ body.dark-mode .footer-sezione hr {
   <div class="container text-center">
     <h2 class="mb-5">Marchi Trattati</h2>
     <div class="d-flex flex-wrap justify-content-center align-items-center gap-5" >
-      <img src="img/loghi/logoPirelli.png" class="logo-marchio" alt="Pirelli">
-      <img src="img/loghi/logoMichelin.png" class="logo-marchio" alt="Michelin">
-      <img src="img/loghi/logoBridgestone.png" class="logo-marchio" alt="Bridgestone">
-      <img src="img/loghi/logoContinental.png" class="logo-marchio" alt="Continental">
+      <img src="img/loghi/logoPirelli.png" class="logo-marchio" alt="Pirelli" loading="lazy">
+      <img src="img/loghi/logoMichelin.png" class="logo-marchio" alt="Michelin" loading="lazy">
+      <img src="img/loghi/logoBridgestone.png" class="logo-marchio" alt="Bridgestone" loading="lazy">
+      <img src="img/loghi/logoContinental.png" class="logo-marchio" alt="Continental" loading="lazy">
     </div>
   </div>
 </section>
@@ -548,28 +565,44 @@ body.dark-mode .footer-sezione hr {
 <div id="rispostaForm" class="mt-3 text-success"></div>
 
 <script>
-  const form = document.getElementById('formContatti');
-  const risposta = document.getElementById('rispostaForm');
+  const form = document.getElementById("formContatti");
+  const risposta = document.getElementById("rispostaForm");
 
-  form.addEventListener('submit', async (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
+
+    // Reset messaggio precedente
+    risposta.className = "";
+    risposta.textContent = "";
+
     const dati = new FormData(form);
     const obj = Object.fromEntries(dati.entries());
 
     try {
-      const res = await fetch('/api/contatti', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
+      const res = await fetch("/api/contatti", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        credentials: "same-origin",
         body: JSON.stringify(obj)
       });
-      if(res.ok){
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        risposta.className = "alert alert-success mt-3";
         risposta.textContent = "Messaggio inviato correttamente!";
         form.reset();
       } else {
-        risposta.textContent = "Errore nell'invio del messaggio.";
+        risposta.className = "alert alert-danger mt-3";
+        risposta.textContent = data.message || "Errore nell'invio del messaggio.";
       }
-    } catch(err){
-      risposta.textContent = "Errore di connessione.";
+
+    } catch (err) {
+      risposta.className = "alert alert-danger mt-3";
+      risposta.textContent = "Errore di connessione al server.";
+      console.error(err);
     }
   });
 </script>
