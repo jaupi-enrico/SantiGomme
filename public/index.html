@@ -23,8 +23,56 @@
 
 <!-- Google Font -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-
 <style>
+/* ==============================
+   VARIABILI TEMA
+============================== */
+
+:root {
+    --bg: #F0F4F9;
+    --text: #1a1a1a;
+    --card-bg: #ffffff;
+    --border: #E1E4E8;
+    --hero-grad-1: #ffffff;
+    --hero-grad-2: #e9f3ff;
+}
+
+body.dark-mode {
+    --bg: #243254;
+    --text: #e2e8f0;
+    --card-bg: #324775c8;
+    --border: #4a5a72;
+    --hero-grad-1: #394e80;
+    --hero-grad-2: #1e293b;
+}
+body.dark-mode .bg-white {
+    background-color: #324775c8 !important; /* leggermente più chiaro dello sfondo dark */
+}
+
+/* ==========================
+   FORM IN DARK MODE
+========================== */
+
+body.dark-mode .form-control,
+body.dark-mode .form-control:focus {
+    background-color: #4c618fc8; /* stesso colore card più chiaro */
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+
+
+
+/* ==============================
+   TRANSIZIONE UNIFORME GLOBALE
+============================== */
+
+body,
+body * {
+    transition:
+        background-color 0.35s ease,
+        color 0.35s ease,
+        border-color 0.35s ease;
+}
 
 /* ==============================
    STILE GENERALE
@@ -32,7 +80,8 @@
 
 body {
     font-family: 'Inter', sans-serif;
-    background-color: #F0F4F9;
+    background-color: var(--bg);
+    color: var(--text);
     scroll-behavior: smooth;
 }
 
@@ -45,13 +94,17 @@ h1, h2, h3 {
 }
 
 /* ==============================
-   NAVBAR GLASS
+   NAVBAR
 ============================== */
 
 .navbar-glass {
-    background: rgba(255,255,255,0.7);
+    background-color: var(--card-bg);
     backdrop-filter: blur(12px);
-    border-bottom: 1px solid #E1E4E8;
+    border-bottom: 1px solid var(--border);
+}
+
+.nav-link {
+    color: var(--text);
 }
 
 /* ==============================
@@ -59,7 +112,11 @@ h1, h2, h3 {
 ============================== */
 
 .hero {
-    background: linear-gradient(135deg, #ffffff, #e9f3ff);
+    background: linear-gradient(
+        135deg,
+        var(--hero-grad-1),
+        var(--hero-grad-2)
+    );
     padding: 120px 0;
     text-align: center;
 }
@@ -68,13 +125,17 @@ h1, h2, h3 {
     font-size: 2.8rem;
 }
 
+/* ==============================
+   BOTTONI
+============================== */
+
 .btn-primario {
     background: linear-gradient(90deg, #007BFF, #4da3ff);
     border: none;
     color: white;
     padding: 12px 28px;
     border-radius: 30px;
-    transition: all 0.3s ease;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .btn-primario:hover {
@@ -87,14 +148,54 @@ h1, h2, h3 {
 ============================== */
 
 .card-servizio {
-    border-radius: 20px;
-    border: 1px solid #E1E4E8;
-    transition: all 0.3s ease;
+    background-color: var(--card-bg);
+    color: var(--text);
+    border-radius: 10px;
+    border: 1px solid var(--border);
 }
 
 .card-servizio:hover {
     transform: translateY(-8px);
     box-shadow: 0 15px 30px rgba(0,0,0,0.05);
+}
+
+.card-servizio img {
+    width: 60px;        /* larghezza SVG */
+    height: 60px;       /* altezza SVG */
+    object-fit: contain;
+    display: block;     /* necessario per il margin auto */
+    margin: 0 auto 15px auto; /* centra l'immagine e aggiunge spazio sotto */
+}
+
+/* ==============================
+   RECENSIONI CARD
+============================== */
+
+.recensione-card {
+    background-color: var(--card-bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    text-align: left;
+}
+
+.recensione-card .stars {
+    font-size: 1.25rem;
+    color: #FFC107; /* colore stella gialla */
+    letter-spacing: 1px;
+}
+
+.recensione-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+
+/* ==============================
+   SEZIONI BIANCHE
+============================== */
+
+.bg-white {
+    background-color: var(--card-bg) !important;
 }
 
 /* ==============================
@@ -104,42 +205,122 @@ h1, h2, h3 {
 .logo-marchio {
     filter: grayscale(100%);
     opacity: 0.7;
-    transition: all 0.3s ease;
-    max-width: 40%;   
-    max-height: 40%;  
+    transition: transform 0.3s ease, filter 0.3s ease, opacity 0.3s ease;
+    max-width: 40%;
+    max-height: 40%;
     object-fit: contain;
 }
 
 .logo-marchio:hover {
-transform: scale(1.1);
+    transform: scale(1.1);
     filter: grayscale(0%);
     opacity: 1;
 }
+
+/* ==============================
+   PERCHE SCEGLIERCI STILE
+============================== */
+
+.sezione h5.highlight {
+    position: relative;
+    display: inline-block;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+.sezione h5.highlight::after {
+    content: "";
+    position: absolute;
+    width: 50px;
+    height: 3px;
+    background: #007BFF; /* linea blu sotto il titolo */
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 0;
+    border-radius: 2px;
+}
+
+.sezione p {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--text);
+}
+
+/* Dark mode */
+body.dark-mode .sezione.bg-white h5,
+body.dark-mode .sezione.bg-white p {
+    color: #ffffff;
+}
+
+
 
 /* ==============================
    CONTATTI
 ============================== */
 
 .box-mappa {
-    background-color: #ffffff;
-    border: 1px solid #E1E4E8;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
     border-radius: 20px;
     height: 300px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #6c757d;
 }
 
 /* ==============================
-   FOOTER
+   FOOTER MIGLIORATO
 ============================== */
 
-footer {
-    background: #ffffff;
-    border-top: 1px solid #E1E4E8;
-    padding: 20px 0;
-    text-align: center;
+.footer-sezione {
+    background-color: var(--card-bg); /* coerente con bg-white */
+    padding: 40px 0;
+}
+
+.footer-sezione h5,
+.footer-sezione h6 {
+    margin-bottom: 0.5rem;
+}
+
+.footer-sezione p {
+    margin-bottom: 0.25rem;
+}
+
+.footer-sezione a.footer-social {
+    color: #34495e; /* colore icone social su bg bianco */
+    transition: color 0.3s ease;
+}
+
+.footer-sezione a.footer-social:hover {
+    color: #007BFF; /* effetto hover blu come bottoni */
+    text-decoration: none;
+}
+
+.footer-sezione hr {
+    opacity: 0.2;
+}
+
+/* ===== DARK MODE FOOTER ===== */
+body.dark-mode .footer-sezione {
+    background-color: var(--card-bg); /* card-bg scuro della dark mode */
+}
+body.dark-mode .footer-sezione h6,
+body.dark-mode .footer-sezione p,
+body.dark-mode .footer-sezione .text-secondary,
+body.dark-mode .footer-sezione .small {
+    color: #ffffff !important; /* tutti i testi bianchi */
+}
+
+body.dark-mode .footer-sezione a.footer-social {
+    color: #ffffff; /* icone social bianche su dark bg */
+}
+
+body.dark-mode .footer-sezione a.footer-social:hover {
+    color: #4da3ff; /* blu accento hover */
+}
+
+body.dark-mode .footer-sezione hr {
+    border-color: #ffffff; /* linea hr bianca */
 }
 
 </style>
@@ -150,10 +331,10 @@ footer {
 <!-- ==============================
      NAVBAR
 ============================== -->
-
 <nav class="navbar navbar-expand-lg navbar-glass sticky-top">
   <div class="container">
     <a class="navbar-brand fw-bold text-primary" href="#">LA SANTI Gomme srl</a>
+    
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavbar">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -163,7 +344,10 @@ footer {
         <li class="nav-item"><a class="nav-link" href="#marchi">Marchi</a></li>
         <li class="nav-item"><a class="nav-link" href="#contatti">Contatti</a></li>
       </ul>
-    </div>
+      <button id="toggleTema" class="btn me-3">🌙</button>
+      </div>
+      
+    
   </div>
 </nav>
 
@@ -206,6 +390,7 @@ footer {
 
       <div class="col-md-6 col-lg-3">
         <div class="card card-servizio p-4 h-100">
+          <img src="img/servizi/gomma.svg" class="card-img-top" alt="Cambio Gomme">
           <h5>Cambio Gomme Stagionale</h5>
           <p>Montaggio e smontaggio pneumatici estivi e invernali.</p>
         </div>
@@ -213,6 +398,7 @@ footer {
 
       <div class="col-md-6 col-lg-3">
         <div class="card card-servizio p-4 h-100">
+            <img src="img/servizi/riparazione.svg" class="card-img-top" alt="Riparazione Pneumatici">
           <h5>Riparazione Pneumatici</h5>
           <p>Interventi rapidi su forature e danni comuni.</p>
         </div>
@@ -220,6 +406,7 @@ footer {
 
       <div class="col-md-6 col-lg-3">
         <div class="card card-servizio p-4 h-100">
+              <img src="img/servizi/volante.svg" class="card-img-top" alt="Equilibratura e Convergenza">
           <h5>Equilibratura e Convergenza</h5>
           <p>Assetto preciso per una guida sicura e stabile.</p>
         </div>
@@ -227,6 +414,7 @@ footer {
 
       <div class="col-md-6 col-lg-3">
         <div class="card card-servizio p-4 h-100">
+          <img src="img/servizi/deposito.svg" class="card-img-top" alt="Deposito Gomme">
           <h5>Deposito Gomme</h5>
           <p>Custodia sicura dei tuoi pneumatici fuori stagione.</p>
         </div>
@@ -236,6 +424,7 @@ footer {
   </div>
 </section>
 
+
 <!-- ==============================
      MARCHI
 ============================== -->
@@ -244,10 +433,10 @@ footer {
   <div class="container text-center">
     <h2 class="mb-5">Marchi Trattati</h2>
     <div class="d-flex flex-wrap justify-content-center align-items-center gap-5" >
-      <img src="img/logoPirelli.png" class="logo-marchio" alt="Pirelli">
-      <img src="img/logoMichelin.png" class="logo-marchio" alt="Michelin">
-      <img src="img/logoBridgestone.png" class="logo-marchio" alt="Bridgestone">
-      <img src="img/logoContinental.png" class="logo-marchio" alt="Continental">
+      <img src="img/loghi/logoPirelli.png" class="logo-marchio" alt="Pirelli">
+      <img src="img/loghi/logoMichelin.png" class="logo-marchio" alt="Michelin">
+      <img src="img/loghi/logoBridgestone.png" class="logo-marchio" alt="Bridgestone">
+      <img src="img/loghi/logoContinental.png" class="logo-marchio" alt="Continental">
     </div>
   </div>
 </section>
@@ -255,15 +444,66 @@ footer {
 <!-- ==============================
      PERCHE SCEGLIERCI
 ============================== -->
-
 <section class="sezione">
   <div class="container text-center">
-    <h2 class="mb-4">Perché Sceglierci</h2>
-    <ul class="list-unstyled fs-5">
-      <li class="mb-2">Professionalità e competenza certificata</li>
-      <li class="mb-2">Tecnologia all'avanguardia</li>
-      <li>Rapidità e puntualità nel servizio</li>
-    </ul>
+    <h2 class="mb-5">Perché Sceglierci</h2>
+    <div class="row g-4 justify-content-center">
+
+      <div class="col-md-4">
+        <h5 class="fw-bold mb-2 highlight">Professionalità Certificata</h5>
+        <p>Personale qualificato e preparato, pronto a offrire servizi sicuri e affidabili per ogni tipo di pneumatico.</p>
+      </div>
+
+      <div class="col-md-4">
+        <h5 class="fw-bold mb-2 highlight">Tecnologia All'Avanguardia</h5>
+        <p>Strumenti moderni e tecniche precise per interventi rapidi e accurati, sempre al passo con le ultime innovazioni.</p>
+      </div>
+
+      <div class="col-md-4">
+        <h5 class="fw-bold mb-2 highlight">Rapidità e Puntualità</h5>
+        <p>Servizio veloce e puntuale, senza compromessi sulla qualità, per farti tornare subito in strada in sicurezza.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ==============================
+     RECENSIONI
+============================== -->
+<section id="recensioni" class="sezione bg-white">
+  <div class="container text-center">
+    <h2 class="mb-5">Cosa Dicono i Nostri Clienti</h2>
+    <div class="row g-4">
+
+      <!-- RECENSIONE 1 -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card recensione-card p-4 h-100">
+          <div class="stars mb-2">⭐️⭐️⭐️⭐️⭐️</div>
+          <h5>Massimo R.</h5>
+          <p>"Personale disponibile e servizio rapido. Sempre soddisfatto quando vengo qui per il cambio gomme!"</p>
+        </div>
+      </div>
+
+      <!-- RECENSIONE 2 -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card recensione-card p-4 h-100">
+          <div class="stars mb-2">⭐️⭐️⭐️⭐️⭐️</div>
+          <h5>Laura B.</h5>
+          <p>"Competenti e professionali, mi hanno spiegato tutto con chiarezza e massima cortesia."</p>
+        </div>
+      </div>
+
+      <!-- RECENSIONE 3 -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card recensione-card p-4 h-100">
+          <div class="stars mb-2">⭐️⭐️⭐️⭐️⭐️</div>
+          <h5>Andrea F.</h5>
+          <p>"Servizio rapido ed efficace. Consigliato a chi cerca professionalità e puntualità."</p>
+        </div>
+      </div>
+
+    </div>
   </div>
 </section>
 
@@ -271,7 +511,7 @@ footer {
      CONTATTI
 ============================== -->
 
-<section id="contatti" class="sezione bg-white">
+<section id="contatti" class="sezione">
   <div class="container">
     <div class="row g-4">
 
@@ -290,7 +530,7 @@ footer {
 
     </div>
     <form id="formContatti">
-  <div class="mb-3">
+  <div class="mb-3 mt-4">
     <label for="nome" class="form-label">Nome</label>
     <input type="text" class="form-control" id="nome" name="nome" required>
   </div>
@@ -336,19 +576,87 @@ footer {
   </div>
 </section>
 
-<!-- ==============================
-     FOOTER
-============================== -->
 
-<footer>
+
+<!-- ==============================
+     FOOTER MIGLIORATO
+============================== -->
+<footer class="footer-sezione py-5 bg-white">
   <div class="container">
-    <p class="mb-1">© 2026 LA SANTI Gomme srl - Travagliato (BS)</p>
-    <small>Seguici sui social</small>
+    <div class="row text-center text-md-start align-items-center">
+      
+      <!-- Logo e descrizione -->
+      <div class="col-md-4 mb-4 mb-md-0">
+        <h5 class="text-primary fw-bold">LA SANTI Gomme srl</h5>
+        <p class="text-secondary small">Servizi professionali per pneumatici a Travagliato (BS). Montaggio, riparazione, deposito e molto altro.</p>
+      </div>
+      
+      <!-- Contatti -->
+      <div class="col-md-4 mb-4 mb-md-0">
+        <h6 class="text-dark fw-semibold">Contatti</h6>
+        <p class="text-secondary small mb-1"><strong>Telefono:</strong> 030 000000</p>
+        <p class="text-secondary small mb-1"><strong>Email:</strong> info@lasantigomme.it</p>
+        <p class="text-secondary small mb-0"><strong>Indirizzo:</strong> Travagliato (BS)</p>
+      </div>
+      
+      <!-- Social -->
+      <div class="col-md-4 text-center text-md-end">
+        <h6 class="text-dark fw-semibold mb-2">Seguici</h6>
+        <a href="#" class="footer-social me-3 fs-5"><i class="bi bi-facebook"></i></a>
+        <a href="#" class="footer-social me-3 fs-5"><i class="bi bi-instagram"></i></a>
+        <a href="#" class="footer-social fs-5"><i class="bi bi-whatsapp"></i></a>
+      </div>
+      
+    </div>
+
+    <hr class="mt-4 border-secondary">
+    
+    <div class="text-center text-secondary small mt-3">
+      © 2026 LA SANTI Gomme srl - Tutti i diritti riservati
+    </div>
   </div>
 </footer>
 
+<!-- Aggiungi Bootstrap Icons per social -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+<style>
+
+.footer-sezione a {
+    color: #e2e8f0;
+    transition: color 0.3s ease;
+}
+
+.footer-sezione a:hover {
+    color: #4da3ff; /* colore hover dei link */
+    text-decoration: none;
+}
+</style>
+
 <!-- Bootstrap Bundle JS (con Popper incluso) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  const toggleBtn = document.getElementById("toggleTema");
+
+  // Controlla se l'utente aveva già scelto dark mode
+  if (localStorage.getItem("tema") === "dark") {
+    document.body.classList.add("dark-mode");
+    toggleBtn.textContent = "☀️";
+  }
+
+  toggleBtn.addEventListener("click", () => {
+    document.body.classList.toggle("dark-mode");
+
+    if (document.body.classList.contains("dark-mode")) {
+      localStorage.setItem("tema", "dark");
+      toggleBtn.textContent = "☀️";
+    } else {
+      localStorage.setItem("tema", "light");
+      toggleBtn.textContent = "🌙";
+    }
+  });
+</script>
 
 </body>
 </html>
