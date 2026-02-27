@@ -7,7 +7,14 @@ const path = require("path");
 const app = express();
 const port = process.env.PORT || 3000;
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const apiKey = process.env.RESEND_API_KEY;
+
+if (!apiKey) {
+  console.error("RESEND_API_KEY mancante!");
+  process.exit(1);
+}
+
+const resend = new Resend(apiKey);
 
 // Middleware
 app.use(express.json());
