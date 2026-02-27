@@ -31,13 +31,13 @@
       "@type": "OpeningHoursSpecification",
       "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
       "opens": "08:00",
-      "closes": "12:30"
+      "closes": "12:00"
     },
     {
       "@type": "OpeningHoursSpecification",
       "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-      "opens": "14:30",
-      "closes": "18:30"
+      "opens": "14:00",
+      "closes": "18:00"
     },
     {
       "@type": "OpeningHoursSpecification",
@@ -318,6 +318,36 @@ body.dark-mode .sezione.bg-white p {
     justify-content: center;
 }
 
+/* Tabella Orari */
+.orari-table {
+    background-color: var(--card-bg);
+    color: var(--text);
+    border-color: var(--border);
+    max-width: 400px;
+}
+
+.orari-table td {
+    padding: 10px 12px;
+    border-color: var(--border);
+}
+
+.orari-table td:first-child {
+    width: 40%;
+}
+
+body.dark-mode .orari-table {
+    background-color: var(--card-bg);
+    color: var(--text);
+}
+
+body.dark-mode .orari-table td {
+    border-color: var(--border);
+}
+
+body.dark-mode .orari-table .table-secondary {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
 /* ==============================
    FOOTER MIGLIORATO
 ============================== */
@@ -570,6 +600,40 @@ body.dark-mode .footer-sezione hr {
         <p><strong>Indirizzo:</strong> Via della Scienza, 6, 25039 Travagliato (BS)</p>
         <p><strong>Telefono:</strong> 0306864669</p>
         <p><strong>Email:</strong> info@lasantigomme.it</p>
+        
+        <h5 class="mt-4 mb-3">Orari di Apertura</h5>
+        <table class="table table-sm table-bordered orari-table">
+          <tbody>
+            <tr>
+              <td><strong>Lunedì</strong></td>
+              <td>08:00-12:00 | 14:00-18:00</td>
+            </tr>
+            <tr>
+              <td><strong>Martedì</strong></td>
+              <td>08:00-12:00 | 14:00-18:00</td>
+            </tr>
+            <tr>
+              <td><strong>Mercoledì</strong></td>
+              <td>08:00-12:00 | 14:00-18:00</td>
+            </tr>
+            <tr>
+              <td><strong>Giovedì</strong></td>
+              <td>08:00-12:00 | 14:00-18:00</td>
+            </tr>
+            <tr>
+              <td><strong>Venerdì</strong></td>
+              <td>08:00-12:00 | 14:00-18:00</td>
+            </tr>
+            <tr>
+              <td><strong>Sabato</strong></td>
+              <td>08:00-12:00</td>
+            </tr>
+            <tr class="table-secondary">
+              <td><strong>Domenica</strong></td>
+              <td><em>Chiuso</em></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       <div class="col-md-6">
