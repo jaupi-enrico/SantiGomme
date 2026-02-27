@@ -1,20 +1,26 @@
 {
   "name": "santigomme",
   "version": "1.0.0",
-  "description": "",
+  "description": "Sito web professionale per LA SANTI Gomme srl - Gommista a Travagliato (BS)",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "node --watch server.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["gommista", "pneumatici", "travagliato", "brescia"],
+  "author": "LA SANTI Gomme srl",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
+    "express-rate-limit": "^7.5.0",
+    "express-validator": "^7.2.0",
+    "helmet": "^8.0.0",
+    "hpp": "^0.2.3",
     "nodemailer": "^8.0.1",
-    "resend": "^6.9.2"
+    "resend": "^6.9.2",
+    "xss": "^1.0.15"
   }
 }
