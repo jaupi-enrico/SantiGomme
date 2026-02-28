@@ -1,0 +1,350 @@
+/* Colori e variabili CSS */
+:root {
+    --bg: #F0F4F9;
+    --text: #1a1a1a;
+    --card-bg: #ffffff;
+    --border: #E1E4E8;
+    --hero-grad-1: #ffffff;
+    --hero-grad-2: #e9f3ff;
+}
+
+/* Dark mode */
+body.dark-mode {
+    --bg: #243254;
+    --text: #e2e8f0;
+    --card-bg: #324775c8;
+    --border: #4a5a72;
+    --hero-grad-1: #394e80;
+    --hero-grad-2: #1e293b;
+}
+body.dark-mode .bg-white {
+    background-color: #324775c8 !important;
+}
+
+body.dark-mode .form-control,
+body.dark-mode .form-control:focus {
+    background-color: #4c618fc8;
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+
+body.dark-mode .sezione.bg-white h5,
+body.dark-mode .sezione.bg-white p {
+    color: #ffffff;
+}
+
+/* Style and transitions */
+
+body,
+body * {
+    transition:
+        background-color 0.35s ease,
+        color 0.35s ease,
+        border-color 0.35s ease;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    scroll-behavior: smooth;
+}
+
+h1, h2, h3 {
+    font-weight: 600;
+}
+
+.sezione {
+    padding: 80px 0;
+}
+
+/* Navbar */
+
+.navbar-glass {
+    background-color: var(--card-bg);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+}
+
+.nav-link {
+    color: var(--text);
+}
+
+/* Hero */
+
+.hero {
+    background: linear-gradient(
+        135deg,
+        var(--hero-grad-1),
+        var(--hero-grad-2)
+    );
+    padding: 120px 0;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: 2.8rem;
+}
+
+/* Buttons */
+
+.btn-primario {
+    background: linear-gradient(90deg, #007BFF, #4da3ff);
+    border: none;
+    color: white;
+    padding: 12px 28px;
+    border-radius: 30px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.btn-primario:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,123,255,0.3);
+}
+
+/* Cards */
+
+.card-servizio {
+    background-color: var(--card-bg);
+    color: var(--text);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+}
+
+.card-servizio:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.05);
+}
+
+.card-servizio img {
+    width: 60px;        /* larghezza SVG */
+    height: 60px;       /* altezza SVG */
+    object-fit: contain;
+    display: block;     /* necessario per il margin auto */
+    margin: 0 auto 15px auto; /* centra l'immagine e aggiunge spazio sotto */
+}
+
+/* Reviews */
+
+.recensione-card {
+    background-color: var(--card-bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    text-align: left;
+}
+
+.recensione-card .stars {
+    font-size: 1.25rem;
+    color: #FFC107;
+    letter-spacing: 1px;
+}
+
+.recensione-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+
+/* White sections */
+
+.bg-white {
+    background-color: var(--card-bg) !important;
+}
+
+/* Logos */
+
+.logo-marchio {
+    opacity: 0.7;
+    transition: transform 0.3s ease, filter 0.3s ease, opacity 0.3s ease;
+    max-width: 40%;
+    max-height: 40%;
+    object-fit: contain;
+}
+
+.logo-marchio:hover {
+    transform: scale(1.1);
+    opacity: 1;
+}
+
+/* Why us section */
+
+.sezione h5.highlight {
+    position: relative;
+    display: inline-block;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+.sezione h5.highlight::after {
+    content: "";
+    position: absolute;
+    width: 50px;
+    height: 3px;
+    background: #007BFF; /* linea blu sotto il titolo */
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 0;
+    border-radius: 2px;
+}
+
+.sezione p {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--text);
+}
+
+/* ==============================
+   CONTATTI
+============================== */
+
+.box-mappa {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Tabella Orari */
+.orari-table {
+    background-color: var(--card-bg);
+    color: var(--text);
+    border-color: var(--border);
+    max-width: 400px;
+}
+
+.orari-table td {
+    padding: 10px 12px;
+    border-color: var(--border);
+}
+
+.orari-table td:first-child {
+    width: 40%;
+}
+
+body.dark-mode .orari-table {
+    background-color: var(--card-bg);
+    color: var(--text);
+}
+
+body.dark-mode .orari-table td {
+    border-color: var(--border);
+}
+
+body.dark-mode .orari-table .table-secondary {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* ==============================
+   FOOTER MIGLIORATO
+============================== */
+
+.footer-sezione {
+    background-color: var(--card-bg); /* coerente con bg-white */
+    padding: 40px 0;
+}
+
+.footer-sezione h5,
+.footer-sezione h6 {
+    margin-bottom: 0.5rem;
+}
+
+.footer-sezione p {
+    margin-bottom: 0.25rem;
+}
+
+.footer-sezione a.footer-social {
+    color: #34495e; /* colore icone social su bg bianco */
+    transition: color 0.3s ease;
+}
+
+.footer-sezione a.footer-social:hover {
+    color: #007BFF; /* effetto hover blu come bottoni */
+    text-decoration: none;
+}
+
+.footer-sezione hr {
+    opacity: 0.2;
+}
+
+/* ===== DARK MODE FOOTER ===== */
+body.dark-mode .footer-sezione {
+    background-color: var(--card-bg); /* card-bg scuro della dark mode */
+}
+body.dark-mode .footer-sezione h6,
+body.dark-mode .footer-sezione p,
+body.dark-mode .footer-sezione .text-secondary,
+body.dark-mode .footer-sezione .small {
+    color: #ffffff !important; /* tutti i testi bianchi */
+}
+
+body.dark-mode .footer-sezione a.footer-social {
+    color: #ffffff; /* icone social bianche su dark bg */
+}
+
+body.dark-mode .footer-sezione a.footer-social:hover {
+    color: #4da3ff; /* blu accento hover */
+}
+
+body.dark-mode .footer-sezione hr {
+    border-color: #ffffff; /* linea hr bianca */
+}
+
+/* Cookie Banner Styles */
+.cookie-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--card-bg);
+  border-top: 1px solid var(--border);
+  padding: 20px;
+  z-index: 9999;
+  box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+}
+
+.cookie-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.cookie-content p {
+  margin: 0;
+  flex: 1;
+  min-width: 300px;
+  font-size: 0.9rem;
+}
+
+.cookie-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .cookie-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  .cookie-buttons {
+    justify-content: center;
+  }
+}
+
+/* Footer */
+.footer-sezione a {
+    color: #e2e8f0;
+    transition: color 0.3s ease;
+}
+
+.footer-sezione a:hover {
+    color: #4da3ff; /* colore hover dei link */
+    text-decoration: none;
+}
