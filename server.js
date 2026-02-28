@@ -42,6 +42,8 @@ if (!emailUser) {
 const resend = new Resend(apiKey);
 
 // Helmet - Headers di sicurezza HTTP
+// TODO reimplementa
+/*
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
@@ -57,6 +59,7 @@ app.use(helmet({
   crossOriginEmbedderPolicy: false,
   crossOriginResourcePolicy: { policy: "cross-origin" },
 }));
+*/
 
 // HPP - Protezione HTTP Parameter Pollution
 app.use(hpp());
