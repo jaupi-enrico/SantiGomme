@@ -4,9 +4,9 @@
 ![Express](https://img.shields.io/badge/Express-5.x-blue)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-purple)
 
-Sito web professionale per **LA SANTI Gomme srl** - Gommista a Travagliato (BS).
+Sito web per **LA SANTI Gomme srl** - Gommista a Travagliato (BS).
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
 # Clona il repository
@@ -24,7 +24,7 @@ cp .env.example .env
 npm start
 ```
 
-## ⚙️ Configurazione
+## Configurazione
 
 Crea un file `.env` con:
 
@@ -35,19 +35,19 @@ RESEND_API_KEY=re_xxxxx
 EMAIL_USER=info@lasantigomme.it
 ```
 
-## 📖 Documentazione
+## Documentazione
 
 Consulta [DOCUMENTAZIONE.md](DOCUMENTAZIONE.md) per la documentazione completa.
 
-## 🔒 Sicurezza
+## Sicurezza
 
-- ✅ Helmet (Security Headers)
-- ✅ Rate Limiting
-- ✅ Input Validation & Sanitization
-- ✅ XSS Protection
-- ✅ GDPR Compliance (Cookie Banner)
+- Helmet (Security Headers)
+- Rate Limiting
+- Input Validation & Sanitization
+- XSS Protection
+- GDPR Compliance (Cookie Banner)
 
-## 📁 Struttura
+## Struttura
 
 ```
 ├── server.js          # Server Express
@@ -59,6 +59,8 @@ Consulta [DOCUMENTAZIONE.md](DOCUMENTAZIONE.md) per la documentazione completa.
 └── DOCUMENTAZIONE.md  # Docs complete
 ```
 
-## 📄 Licenza
+## Licenza
 
-ISC License - © 2026 LA SANTI Gomme srl
+Copyright (c) 2026 Enrico Jaupi, Davide Albo
+
+All rights reserved.
