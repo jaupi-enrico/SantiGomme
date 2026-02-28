@@ -3,11 +3,12 @@
  * LA SANTI Gomme srl - Server Express
  * ===========================================
  * Server web sicuro con best practices di sicurezza
- * Versione: 2.0.0
+ * Versione: 1.1.0
  */
 
 require("dotenv").config();
 
+// Dependencies
 const express = require("express");
 const { Resend } = require("resend");
 const path = require("path");
@@ -17,56 +18,39 @@ const { body, validationResult } = require("express-validator");
 const xss = require("xss");
 const hpp = require("hpp");
 
+// Server config
 const app = express();
 const port = process.env.PORT || 3000;
 const isProduction = process.env.NODE_ENV === "production";
 
-// ============================================
-// VALIDAZIONE CONFIGURAZIONE
-// ============================================
+// API keys
 const apiKey = process.env.RESEND_API_KEY;
 const emailUser = process.env.EMAIL_USER;
 
+// Controllo API keys
 if (!apiKey) {
-  console.error("❌ RESEND_API_KEY mancante!");
+  console.error("RESEND_API_KEY mancante!");
   process.exit(1);
 }
 
 if (!emailUser) {
-  console.error("❌ EMAIL_USER mancante!");
+  console.error("EMAIL_USER mancante!");
   process.exit(1);
 }
 
+// Inizializzazione classe per le email
 const resend = new Resend(apiKey);
 
-// ============================================
-// MIDDLEWARE DI SICUREZZA
-// ============================================
-
 // Helmet - Headers di sicurezza HTTP
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdn.jsdelivr.net"],
-      imgSrc: ["'self'", "data:", "https:"],
-      frameSrc: ["https://www.google.com"],
-      connectSrc: ["'self'"],
-    },
-  },
-  crossOriginEmbedderPolicy: false,
-  crossOriginResourcePolicy: { policy: "cross-origin" },
-}));
+app.use(helmet());
 
 // HPP - Protezione HTTP Parameter Pollution
 app.use(hpp());
 
 // Rate Limiting generale
 const limiterGenerale = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minuti
-  max: 100, // max 100 richieste per IP
+  windowMs: 3 * 60 * 1000, // 3 minuti
+  max: 300, // max 300 richieste per IP
   message: {
     success: false,
     message: "Troppe richieste, riprova più tardi."
@@ -76,7 +60,7 @@ const limiterGenerale = rateLimit({
 });
 app.use(limiterGenerale);
 
-// Rate Limiting specifico per API contatti (anti-spam)
+// Rate Limiting specifico per API contatti
 const limiterContatti = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 ora
   max: 5, // max 5 messaggi per IP all'ora
@@ -88,7 +72,7 @@ const limiterContatti = rateLimit({
   legacyHeaders: false,
 });
 
-// Middleware per parsing con limiti
+// Middleware per parsing con limiti di dimensione
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 
@@ -99,40 +83,27 @@ app.use(express.static(path.join(__dirname, "public"), {
   lastModified: true,
 }));
 
-// ============================================
-// UTILITY FUNCTIONS
-// ============================================
-
-/**
- * Sanitizza input per prevenire XSS
- */
+// Sanitizza input per prevenire XSS
 function sanitizeInput(input) {
   if (typeof input !== "string") return "";
   return xss(input.trim());
 }
 
-/**
- * Valida formato email
- */
+// Valida formato email
 function isValidEmail(email) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
 
-/**
- * Log strutturato
- */
+// Funzione per il log degli eventi
 function logEvent(type, message, data = {}) {
   const timestamp = new Date().toISOString();
   const logEntry = { timestamp, type, message, ...data };
   console.log(JSON.stringify(logEntry));
 }
 
-// ============================================
-// ROUTES API
-// ============================================
-
 // Validatori per il form contatti
+// TODO da controllare se si fa così la validazione lato server
 const validatoriContatti = [
   body("nome")
     .trim()
@@ -152,7 +123,7 @@ const validatoriContatti = [
 
 // Route API contatti con rate limiting specifico
 app.post("/api/contatti", limiterContatti, validatoriContatti, async (req, res) => {
-  // Verifica errori di validazione
+  // Verifica errori di validazione di validatoriContatti
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({
@@ -217,29 +188,12 @@ ${messaggio}
   }
 });
 
-// ============================================
-// HEALTH CHECK ENDPOINT
-// ============================================
+// Health check server
 app.get("/api/health", (req, res) => {
   res.status(200).json({
     status: "ok",
     timestamp: new Date().toISOString()
   });
-});
-
-// ============================================
-// ERROR HANDLING
-// ============================================
-
-// 404 - Pagina non trovata (per API)
-app.use((req, res, next) => {
-  if (req.path.startsWith('/api/')) {
-    return res.status(404).json({
-      success: false,
-      message: "Endpoint non trovato."
-    });
-  }
-  next();
 });
 
 // Fallback route - 404 per pagine non trovate
@@ -258,9 +212,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-// ============================================
-// AVVIO SERVER
-// ============================================
+// Avvio server
 app.listen(port, () => {
   logEvent("INFO", `Server avviato`, { port, environment: isProduction ? "production" : "development" });
   console.log(` Server attivo sulla porta ${port}`);
