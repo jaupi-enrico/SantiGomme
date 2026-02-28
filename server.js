@@ -2,236 +2,238 @@
  * ===========================================
  * LA SANTI Gomme srl - Server Express
  * ===========================================
- * Server web sicuro con best practices di sicurezza
- * Versione: 1.1.0
+ * Server web con hardening sicurezza e validazioni robuste
+ * Versione: 2.0.0
  */
 
 require("dotenv").config();
 
-// Dependencies
 const express = require("express");
 const { Resend } = require("resend");
 const path = require("path");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
-const { body, validationResult } = require("express-validator");
+const { body, matchedData, validationResult } = require("express-validator");
 const xss = require("xss");
 const hpp = require("hpp");
 
-// Server config
 const app = express();
-const port = process.env.PORT || 3000;
+const port = Number(process.env.PORT) || 3000;
 const isProduction = process.env.NODE_ENV === "production";
+const appName = "LA SANTI Gomme srl";
+const appRoot = path.join(__dirname, "public");
 
-// API keys
-const apiKey = process.env.RESEND_API_KEY;
-const emailUser = process.env.EMAIL_USER;
+const requiredEnvKeys = ["RESEND_API_KEY", "EMAIL_USER"];
+const missingEnvKeys = requiredEnvKeys.filter((key) => !process.env[key]);
 
-// Controllo API keys
-if (!apiKey) {
-  console.error("RESEND_API_KEY mancante!");
+if (missingEnvKeys.length > 0) {
+  console.error(`Variabili ambiente mancanti: ${missingEnvKeys.join(", ")}`);
   process.exit(1);
 }
 
-if (!emailUser) {
-  console.error("EMAIL_USER mancante!");
-  process.exit(1);
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+function logEvent(level, message, data = {}) {
+  const payload = {
+    timestamp: new Date().toISOString(),
+    level,
+    message,
+    ...data,
+  };
+  console.log(JSON.stringify(payload));
 }
 
-// Inizializzazione classe per le email
-const resend = new Resend(apiKey);
+function sanitizeText(value) {
+  if (typeof value !== "string") return "";
+  return xss(value).replace(/[\u0000-\u001F\u007F]/g, "").trim();
+}
 
-// Helmet - Headers di sicurezza HTTP
-// TODO reimplementa
-/*
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdn.jsdelivr.net"],
-      imgSrc: ["'self'", "data:", "https:", "blob:"],
-      frameSrc: ["https://www.google.com"],
-      connectSrc: ["'self'", "https://cdn.jsdelivr.net"],
+function maskEmail(value) {
+  if (!value || typeof value !== "string") return "***";
+  const [localPart, domain] = value.split("@");
+  if (!localPart || !domain) return "***";
+  return `${localPart.slice(0, 2)}***@${domain}`;
+}
+
+function getValidationErrors(req) {
+  return validationResult(req).array({ onlyFirstError: true });
+}
+
+app.disable("x-powered-by");
+app.set("trust proxy", isProduction ? 1 : false);
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com"],
+        fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdn.jsdelivr.net"],
+        imgSrc: ["'self'", "data:", "blob:", "https:"],
+        connectSrc: ["'self'"],
+        frameSrc: ["https://www.google.com", "https://maps.google.com"],
+        objectSrc: ["'none'"],
+        baseUri: ["'self'"],
+        formAction: ["'self'"],
+      },
     },
-  },
-  crossOriginEmbedderPolicy: false,
-  crossOriginResourcePolicy: { policy: "cross-origin" },
-}));
-*/
+    crossOriginEmbedderPolicy: false,
+    crossOriginResourcePolicy: { policy: "same-site" },
+    hsts: isProduction,
+    referrerPolicy: { policy: "strict-origin-when-cross-origin" },
+  })
+);
 
-// HPP - Protezione HTTP Parameter Pollution
 app.use(hpp());
-
-// Rate Limiting generale
-const limiterGenerale = rateLimit({
-  windowMs: 3 * 60 * 1000, // 3 minuti
-  max: 300, // max 300 richieste per IP
-  message: {
-    success: false,
-    message: "Troppe richieste, riprova più tardi."
-  },
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-app.use(limiterGenerale);
-
-// Rate Limiting specifico per API contatti
-const limiterContatti = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 ora
-  max: 5, // max 5 messaggi per IP all'ora
-  message: {
-    success: false,
-    message: "Hai inviato troppi messaggi. Riprova tra un'ora."
-  },
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-
-// Middleware per parsing con limiti di dimensione
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 
-// File statici con cache headers
-app.use(express.static(path.join(__dirname, "public"), {
-  maxAge: isProduction ? "1d" : 0,
-  etag: true,
-  lastModified: true,
-}));
+const generalLimiter = rateLimit({
+  windowMs: 3 * 60 * 1000,
+  max: 300,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: "Troppe richieste, riprova più tardi." },
+});
 
-// Sanitizza input per prevenire XSS
-function sanitizeInput(input) {
-  if (typeof input !== "string") return "";
-  return xss(input.trim());
-}
+const contactLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: "Hai inviato troppi messaggi. Riprova tra un'ora." },
+});
 
-// Valida formato email
-function isValidEmail(email) {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-}
+app.use(generalLimiter);
 
-// Funzione per il log degli eventi
-function logEvent(type, message, data = {}) {
-  const timestamp = new Date().toISOString();
-  const logEntry = { timestamp, type, message, ...data };
-  console.log(JSON.stringify(logEntry));
-}
+app.use(
+  express.static(appRoot, {
+    maxAge: isProduction ? "1d" : 0,
+    etag: true,
+    lastModified: true,
+  })
+);
 
-// Validatori per il form contatti
-// TODO da controllare se si fa così la validazione lato server
-const validatoriContatti = [
+const contactValidators = [
   body("nome")
+    .isString()
     .trim()
-    .notEmpty().withMessage("Il nome è obbligatorio.")
-    .isLength({ min: 2, max: 100 }).withMessage("Il nome deve essere tra 2 e 100 caratteri.")
-    .matches(/^[a-zA-ZàèéìòùÀÈÉÌÒÙ\s'-]+$/).withMessage("Il nome contiene caratteri non validi."),
+    .notEmpty()
+    .withMessage("Il nome è obbligatorio.")
+    .isLength({ min: 2, max: 100 })
+    .withMessage("Il nome deve essere tra 2 e 100 caratteri.")
+    .matches(/^[a-zA-ZàèéìòùÀÈÉÌÒÙ\s'-]+$/)
+    .withMessage("Il nome contiene caratteri non validi."),
   body("email")
+    .isString()
     .trim()
-    .normalizeEmail()
-    .notEmpty().withMessage("L'email è obbligatoria.")
-    .isEmail().withMessage("Inserisci un indirizzo email valido."),
+    .notEmpty()
+    .withMessage("L'email è obbligatoria.")
+    .isEmail()
+    .withMessage("Inserisci un indirizzo email valido.")
+    .normalizeEmail(),
   body("messaggio")
+    .isString()
     .trim()
-    .notEmpty().withMessage("Il messaggio è obbligatorio.")
-    .isLength({ min: 10, max: 2000 }).withMessage("Il messaggio deve essere tra 10 e 2000 caratteri."),
+    .notEmpty()
+    .withMessage("Il messaggio è obbligatorio.")
+    .isLength({ min: 10, max: 2000 })
+    .withMessage("Il messaggio deve essere tra 10 e 2000 caratteri."),
 ];
 
-// Route API contatti con rate limiting specifico
-app.post("/api/contatti", limiterContatti, validatoriContatti, async (req, res) => {
-  // Verifica errori di validazione di validatoriContatti
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({
-      success: false,
-      message: errors.array()[0].msg,
-      errors: errors.array()
-    });
-  }
-
-  // Sanitizza input
-  const nome = sanitizeInput(req.body.nome);
-  const email = sanitizeInput(req.body.email);
-  const messaggio = sanitizeInput(req.body.messaggio);
-
-  // Double-check validazione email
-  if (!isValidEmail(email)) {
-    return res.status(400).json({
-      success: false,
-      message: "Indirizzo email non valido."
-    });
-  }
-
+app.post("/api/contatti", contactLimiter, contactValidators, async (req, res, next) => {
   try {
+    const errors = getValidationErrors(req);
+    if (errors.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: errors[0].msg,
+        errors,
+      });
+    }
+
+    const data = matchedData(req, { locations: ["body"] });
+    const nome = sanitizeText(data.nome);
+    const email = sanitizeText(data.email);
+    const messaggio = sanitizeText(data.messaggio);
+
     await resend.emails.send({
-      from: "LA SANTI Gomme <onboarding@resend.dev>",
-      to: emailUser,
+      from: `${appName} <onboarding@resend.dev>`,
+      to: process.env.EMAIL_USER,
       subject: `[Sito Web] Nuovo messaggio da ${nome}`,
-      reply_to: email,
-      text: `
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-NUOVO MESSAGGIO DAL SITO WEB
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Nome: ${nome}
-Email: ${email}
-Data: ${new Date().toLocaleString("it-IT", { timeZone: "Europe/Rome" })}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-MESSAGGIO:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-${messaggio}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      `
+      replyTo: email,
+      text: [
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+        "NUOVO MESSAGGIO DAL SITO WEB",
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+        "",
+        `Nome: ${nome}`,
+        `Email: ${email}`,
+        `Data: ${new Date().toLocaleString("it-IT", { timeZone: "Europe/Rome" })}`,
+        "",
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+        "MESSAGGIO:",
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+        "",
+        messaggio,
+      ].join("\n"),
     });
 
-    logEvent("INFO", "Email inviata con successo", { nome, email: email.substring(0, 3) + "***" });
+    logEvent("INFO", "Email inviata con successo", {
+      nome,
+      email: maskEmail(email),
+      ip: req.ip,
+    });
 
     return res.status(200).json({
       success: true,
-      message: "Messaggio inviato correttamente!"
+      message: "Messaggio inviato correttamente!",
     });
-
-  } catch (err) {
-    logEvent("ERROR", "Errore invio email", { error: err.message });
-
-    return res.status(500).json({
-      success: false,
-      message: "Errore nell'invio dell'email. Riprova più tardi."
-    });
+  } catch (error) {
+    return next(error);
   }
 });
 
-// Health check server
 app.get("/api/health", (req, res) => {
   res.status(200).json({
     status: "ok",
-    timestamp: new Date().toISOString()
+    environment: isProduction ? "production" : "development",
+    uptime: Math.floor(process.uptime()),
+    timestamp: new Date().toISOString(),
   });
 });
 
-// Fallback route - 404 per pagine non trovate
+app.use("/api", (req, res) => {
+  res.status(404).json({ success: false, message: "Endpoint API non trovato." });
+});
+
 app.use((req, res) => {
-  // Se la richiesta non è per un file statico e non è un'API, mostro 404
-  res.status(404).sendFile(path.join(__dirname, "public", "index.html"));
+  res.status(404).sendFile(path.join(appRoot, "index.html"));
 });
 
-// Global error handler
-app.use((err, req, res, next) => {
-  logEvent("ERROR", "Errore server", { error: err.message, stack: isProduction ? undefined : err.stack });
-  
-  res.status(500).json({
+app.use((error, req, res, next) => {
+  logEvent("ERROR", "Errore server", {
+    message: error.message,
+    stack: isProduction ? undefined : error.stack,
+    path: req.originalUrl,
+    method: req.method,
+  });
+
+  if (res.headersSent) {
+    return next(error);
+  }
+
+  return res.status(500).json({
     success: false,
-    message: "Si è verificato un errore interno. Riprova più tardi."
+    message: "Si è verificato un errore interno. Riprova più tardi.",
   });
 });
 
-// Avvio server
 app.listen(port, () => {
-  logEvent("INFO", `Server avviato`, { port, environment: isProduction ? "production" : "development" });
-  console.log(` Server attivo sulla porta ${port}`);
-  console.log(` Ambiente: ${isProduction ? "PRODUZIONE" : "SVILUPPO"}`);
+  logEvent("INFO", "Server avviato", {
+    port,
+    environment: isProduction ? "production" : "development",
+  });
+  console.log(`Server attivo su http://localhost:${port}`);
 });
