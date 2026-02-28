@@ -42,7 +42,21 @@ if (!emailUser) {
 const resend = new Resend(apiKey);
 
 // Helmet - Headers di sicurezza HTTP
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdn.jsdelivr.net"],
+      imgSrc: ["'self'", "data:", "https:", "blob:"],
+      frameSrc: ["https://www.google.com"],
+      connectSrc: ["'self'", "https://cdn.jsdelivr.net"],
+    },
+  },
+  crossOriginEmbedderPolicy: false,
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+}));
 
 // HPP - Protezione HTTP Parameter Pollution
 app.use(hpp());
