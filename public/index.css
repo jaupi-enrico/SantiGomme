@@ -89,6 +89,11 @@ h1, h2, h3 {
     margin: 0 auto 15px auto; /* centra l'immagine e aggiunge spazio sotto */
 }
 
+.card-servizio h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
 /* Reviews */
 
 .recensione-card {
@@ -96,6 +101,11 @@ h1, h2, h3 {
     color: var(--text);
     border: 1px solid var(--border);
     text-align: left;
+}
+
+.recensione-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
 }
 
 .recensione-card .stars {
@@ -133,14 +143,15 @@ h1, h2, h3 {
 
 /* Why us section */
 
-.sezione h5.highlight {
+.sezione h3.highlight {
     position: relative;
     display: inline-block;
     padding-bottom: 5px;
     margin-bottom: 15px;
+    font-size: 1.25rem;
 }
 
-.sezione h5.highlight::after {
+.sezione h3.highlight::after {
     content: "";
     position: absolute;
     width: 50px;
@@ -196,8 +207,18 @@ h1, h2, h3 {
     padding: 40px 0;
 }
 
-.footer-sezione h5,
-.footer-sezione h6 {
+.footer-sezione h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.footer-sezione h4 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.footer-sezione h3,
+.footer-sezione h4 {
     margin-bottom: 0.5rem;
 }
 
