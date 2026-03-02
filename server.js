@@ -78,20 +78,39 @@ app.use(
           "'self'",
           "'unsafe-inline'",
           "https://cdn.jsdelivr.net",
-          "https://fonts.googleapis.com"
+          "https://fonts.googleapis.com",
+          "https://vercel.live"
         ],
         fontSrc: [
           "'self'",
           "https://cdn.jsdelivr.net",
-          "https://fonts.gstatic.com"
+          "https://fonts.gstatic.com",
+          "https://vercel.live",
+          "https://assets.vercel.com"
         ],
-        imgSrc: ["'self'", "data:", "https://www.gstatic.com"],
-        connectSrc: ["'self'", "https://vercel.live"],
+        imgSrc: [
+          "'self'",
+          "data:",
+          "blob:",
+          "https://www.gstatic.com",
+          "https://vercel.live",
+          "https://vercel.com",
+          "https://santi-gomme-omega.vercel.app"
+        ],
+        connectSrc: [
+          "'self'",
+          "https://vercel.live",
+          "https://cdn.jsdelivr.net",
+          "wss://ws-us3.pusher.com"
+        ],
         frameSrc: [
           "https://www.google.com",
           "https://maps.google.com",
           "https://vercel.live"
-        ]
+        ],
+        objectSrc: ["'none'"],
+        baseUri: ["'self'"],
+        formAction: ["'self'"]
       }
     },
     crossOriginEmbedderPolicy: false
