@@ -160,7 +160,7 @@ h1, h2, h3 {
     background: #007BFF; /* linea blu sotto il titolo */
     left: 50%;
     transform: translateX(-50%);
-    bottom: 0;
+    bottom: -10%;
     border-radius: 2px;
 }
 
