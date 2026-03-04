@@ -1,6 +1,6 @@
 # LA SANTI Gomme srl - Documentazione Tecnica
 
-![Version](https://img.shields.io/badge/version-2.0.0-blue)
+![Version](https://img.shields.io/badge/version-2.0.1-blue)
 ![Node](https://img.shields.io/badge/node-%3E%3D18.0.0-green)
 ![License](https://img.shields.io/badge/license-ISC-lightgrey)
 
@@ -60,13 +60,19 @@ SantiGomme/
 ├── .env.example           # Template variabili d'ambiente
 ├── README.md              # Documentazione rapida
 ├── DOCUMENTAZIONE.md      # Questa documentazione
+├── CHECKLIST_PRE_VENDITA.txt  # Checklist pre-deploy
 ├── LICENSE                # Licenza del progetto
 └── public/                # File statici serviti
-    ├── index.html         # Pagina principale (SPA)
+    ├── index.html         # Pagina principale
+    ├── index.css          # Stili personalizzati
+    ├── index.js           # JavaScript frontend
     ├── privacy.html       # Privacy Policy
     ├── cookie.html        # Cookie Policy
     ├── termini.html       # Termini e Condizioni
     └── img/
+        ├── carousel/      # Immagini carousel hero
+        │   ├── carousel1.jpg
+        │   └── carousel2.jpg
         ├── icon/          # Favicon e icone PWA
         │   ├── favicon.ico
         │   ├── favicon-16x16.png
@@ -220,7 +226,7 @@ Response
 ## Funzionalità
 
 ### Sezioni del Sito
-1. **Hero** - Banner principale con CTA
+1. **Hero** - Banner principale con carousel e CTA
 2. **Servizi** - 4 card con servizi offerti
 3. **Marchi** - Loghi marchi trattati
 4. **Perché Sceglierci** - 3 punti di forza
@@ -234,11 +240,6 @@ Response
 | Email | email | Formato email valido |
 | Messaggio | textarea | 10-2000 caratteri |
 | Privacy | checkbox | Obbligatorio |
-
-### Dark Mode
-- Toggle manuale nel navbar
-- Preferenza salvata in localStorage
-- Transizioni CSS fluide
 
 ### Cookie Consent
 - Banner conforme GDPR
@@ -519,11 +520,6 @@ I log sono in formato JSON per facile parsing:
 3. Controllare che JavaScript sia abilitato
 4. Testare con browser diverso
 
-### "Dark mode non si salva"
-- Verificare che localStorage sia abilitato
-- Svuotare cache browser
-- Non usare navigazione in incognito
-
 ---
 
 ## Crediti
@@ -539,6 +535,13 @@ I log sono in formato JSON per facile parsing:
 
 ## Changelog
 
+### v2.0.1 (Marzo 2026)
+- 🔧 Rimossa funzionalità Dark Mode (non implementata)
+- 🔧 Aggiornata Cookie Policy (rimosso cookie "tema" inesistente)
+- 🔧 Corretto testo banner cookie (rimosso riferimento a cookie analitici)
+- 📝 Aggiornata documentazione per coerenza con codice
+- 📝 Aggiornata struttura progetto nella documentazione
+
 ### v2.0.0 (Febbraio 2026)
 - ✨ Implementazione completa sicurezza (Helmet, Rate Limiting, XSS)
 - ✨ Compliance GDPR (Cookie Banner, Privacy Policy)
@@ -551,7 +554,6 @@ I log sono in formato JSON per facile parsing:
 ### v1.0.0 (Release Iniziale)
 - 🎉 Lancio sito web
 - ✨ Form contatti con Resend
-- ✨ Dark mode
 - ✨ Design responsive
 
 ---

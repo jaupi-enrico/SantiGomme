@@ -3,6 +3,7 @@
 ![Node.js](https://img.shields.io/badge/Node.js-18%2B-green)
 ![Express](https://img.shields.io/badge/Express-5.x-blue)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-purple)
+![Version](https://img.shields.io/badge/version-2.0.1-blue)
 
 Sito web per **LA SANTI Gomme srl** - Gommista a Travagliato (BS).
 
@@ -53,9 +54,12 @@ Consulta [DOCUMENTAZIONE.md](DOCUMENTAZIONE.md) per la documentazione completa.
 ├── server.js          # Server Express
 ├── public/
 │   ├── index.html     # Homepage
+│   ├── index.js       # JavaScript frontend
+│   ├── index.css      # Stili personalizzati
 │   ├── privacy.html   # Privacy Policy
 │   ├── cookie.html    # Cookie Policy
-│   └── termini.html   # Termini e Condizioni
+│   ├── termini.html   # Termini e Condizioni
+│   └── img/           # Immagini e icone
 └── DOCUMENTAZIONE.md  # Docs complete
 ```
 

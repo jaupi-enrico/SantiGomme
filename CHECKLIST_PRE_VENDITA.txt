@@ -1,6 +1,6 @@
 ╔═══════════════════════════════════════════════════════════════════════════╗
 ║                    LA SANTI GOMME SRL - CHECKLIST PRE-VENDITA             ║
-║                         Versione 1.0 - Febbraio 2026                      ║
+║                         Versione 1.1 - Marzo 2026                         ║
 ╚═══════════════════════════════════════════════════════════════════════════╝
 
 ═══════════════════════════════════════════════════════════════════════════
@@ -38,9 +38,9 @@ FILE: public/termini.html
 [ ] Verificare capitale sociale (se S.r.l.)
 
 FILE: public/cookie.html
-[ ] Verificare lista cookie utilizzati (attualmente solo tecnici)
+[ ] Verificare lista cookie utilizzati (cookieConsent, cookieConsentDate)
 [ ] Aggiornare data ultima modifica
-[ ] Aggiungere link a tool di revoca consenso se necessario
+[ ] Verificare funzionamento revoca consenso
 
 ═══════════════════════════════════════════════════════════════════════════
  3. CONTENUTI DA COMPLETARE
@@ -49,35 +49,35 @@ FILE: public/cookie.html
 FILE: public/index.html
 
 SEZIONE SERVIZI:
-[ ] Aggiungere 4 card servizi con icone SVG
-[ ] Cambio Gomme Stagionale
-[ ] Riparazione Pneumatici
-[ ] Equilibratura e Convergenza
-[ ] Deposito Gomme
+[x] Aggiungere 4 card servizi con icone SVG
+[x] Cambio Gomme Stagionale
+[x] Riparazione Pneumatici
+[x] Equilibratura e Convergenza
+[x] Deposito Gomme
 
 SEZIONE MARCHI:
-[ ] Verificare loghi presenti (Pirelli, Michelin, Bridgestone, Continental)
+[x] Verificare loghi presenti (Pirelli, Michelin, Bridgestone, Continental)
 [ ] Aggiungere ulteriori marchi se trattati
 
 SEZIONE PERCHÉ SCEGLIERCI:
-[ ] Aggiungere 3 punti di forza con descrizione
+[x] Aggiungere 3 punti di forza con descrizione
 
 SEZIONE RECENSIONI:
-[ ] Aggiungere minimo 3 recensioni reali
-[ ] Include nome cliente, stella rating, testo
+[x] Aggiungere minimo 3 recensioni reali
+[x] Include nome cliente, stella rating, testo
 
 SEZIONE CONTATTI:
-[ ] Mappa Google Maps funzionante
-[ ] Orari apertura completi
-[ ] Numero telefono
-[ ] Email contatto
+[x] Mappa Google Maps funzionante
+[x] Orari apertura completi
+[x] Numero telefono
+[x] Email contatto
 [ ] Form funzionante e testato
 
 FOOTER:
-[ ] Logo/nome azienda
-[ ] Descrizione breve
+[x] Logo/nome azienda
+[x] Descrizione breve
 [ ] Link social (Facebook, Instagram, WhatsApp) O RIMUOVERE
-[ ] Anno copyright aggiornato
+[x] Anno copyright aggiornato
 
 ═══════════════════════════════════════════════════════════════════════════
  4. IMMAGINI E MEDIA OBBLIGATORI
@@ -91,10 +91,10 @@ LOGHI MARCHI (img/loghi/):
 [ ] Aggiungere ulteriori marchi se necessario
 
 ICONE SERVIZI (img/servizi/):
-[ ] gomma.svg (cambio gomme)
-[ ] riparazione.svg (forature)
-[ ] volante.svg (equilibratura)
-[ ] deposito.svg (deposito pneumatici)
+[x] gomma.svg (cambio gomme)
+[x] riparazione.svg (forature)
+[x] volante.svg (equilibratura)
+[x] deposito.svg (deposito pneumatici)
 
 FAVICON (img/icon/):
 [x] favicon.ico
@@ -164,12 +164,6 @@ RESPONSIVE DESIGN:
 [ ] Desktop 1280px
 [ ] Desktop 1920px (Full HD)
 [ ] Desktop 2560px (4K)
-
-DARK MODE:
-[ ] Toggle button funziona
-[ ] Tema cambia su tutte le sezioni
-[ ] Preferenza salvata in localStorage
-[ ] Persistente tra refreshes
 
 NAVIGAZIONE:
 [ ] Smooth scroll funziona
@@ -420,6 +414,6 @@ ___________________________________________________________________
 
 ═══════════════════════════════════════════════════════════════════════════
 Data creazione: 27 Febbraio 2026
-Ultima modifica: _______________
+Ultima modifica: 4 Marzo 2026
 Stato: [ ] In Progresso  [ ] Completato  [ ] Live
 ═══════════════════════════════════════════════════════════════════════════
