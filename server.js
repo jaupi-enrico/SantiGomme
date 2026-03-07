@@ -18,7 +18,6 @@ const xss = require("xss");
 const hpp = require("hpp");
 
 const app = express();
-app.set('trust proxy', 1);
 const port = Number(process.env.PORT) || 3000;
 const isProduction = process.env.NODE_ENV === "production";
 const appName = "LA SANTI Gomme srl";
@@ -126,6 +125,7 @@ const generalLimiter = rateLimit({
   max: 300,
   standardHeaders: true,
   legacyHeaders: false,
+  keyGenerator: (req) => req.ip,
   message: { success: false, message: "Troppe richieste, riprova più tardi." },
 });
 
@@ -259,12 +259,20 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(appRoot, "index.html"));
+});
+
 app.use("/api", (req, res) => {
-  res.status(404).json({ success: false, message: "Endpoint API non trovato." });
+  res.status(404).json({
+    success: false,
+    message: "Endpoint API non trovato."
+  });
 });
 
 app.use((req, res) => {
-  res.status(404).sendFile(path.join(appRoot, "index.html"));
+  res.status(404).sendFile(path.join(appRoot, "404.html"));
 });
 
 app.use((error, req, res, next) => {
@@ -285,10 +293,27 @@ app.use((error, req, res, next) => {
   });
 });
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   logEvent("INFO", "Server avviato", {
     port,
     environment: isProduction ? "production" : "development",
   });
   console.log(`Server attivo su http://localhost:${port}`);
 });
+
+function shutdown(signal) {
+  logEvent("INFO", `Ricevuto ${signal}, chiusura server...`);
+
+  server.close(() => {
+    logEvent("INFO", "Server chiuso correttamente");
+    process.exit(0);
+  });
+
+  setTimeout(() => {
+    logEvent("ERROR", "Shutdown forzato");
+    process.exit(1);
+  }, 10000);
+}
+
+process.on("SIGTERM", shutdown);
+process.on("SIGINT", shutdown);
